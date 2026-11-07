@@ -1,0 +1,35 @@
+{
+  "name": "college-admission-agent",
+  "description": "FastAPI + FastMCP service that predicts graduate school admission chances using a watsonx.ai online deployment endpoint.",
+  "repository": "https://github.com/nilanjanm944-del/college-admission-agent",
+  "logo": "https://www.ibm.com/favicon.ico",
+  "keywords": ["fastapi", "watsonx", "ibm", "machine-learning", "mcp"],
+  "stack": "heroku-22",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "env": {
+    "IBM_CLOUD_API_KEY": {
+      "description": "IBM Cloud API key used to obtain an IAM bearer token for calling the watsonx.ai deployment endpoint.",
+      "required": true
+    },
+    "WATSONX_DEPLOYMENT_URL": {
+      "description": "Full URL to the watsonx.ai deployment predictions endpoint (region + deployment ID + version query param).",
+      "value": "https://au-syd.ml.cloud.ibm.com/ml/v4/deployments/01a1abb2-7435-728c-99e1-4c7d2fb32f02/predictions?version=2021-05-01",
+      "required": false
+    }
+  },
+  "scripts": {
+    "postdeploy": "echo 'College Admission Agent deployed successfully.'"
+  },
+  "addons": [],
+  "success_url": "/health"
+}
