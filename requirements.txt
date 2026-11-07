@@ -1,0 +1,11 @@
+# Runtime dependencies
+fastapi==0.115.12
+uvicorn[standard]==0.34.3
+pydantic==2.9.2
+requests==2.32.3
+fastmcp==2.3.4
+
+python-dotenv>=1.1.0
+
+# IBM Cloud / watsonx.ai SDK (optional — used if you switch to the official client)
+# ibm-watson-machine-learning==1.0.360

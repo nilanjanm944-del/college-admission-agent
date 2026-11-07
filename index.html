@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABC College — Admission Portal</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3250;
+      --text: #e8eaf6;
+      --muted: #8b91b8;
+      --accent: #6c8fff;
+      --accent2: #a78bfa;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --orange: #fb923c;
+      --red: #f87171;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,17,23,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 58px;
+    }
+    .nav-brand { font-weight: 800; font-size: 1.05rem; color: var(--accent); letter-spacing: .02em; }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: .875rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(108,143,255,.18) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(108,143,255,.12); border: 1px solid rgba(108,143,255,.3);
+      border-radius: 999px; padding: .3rem .9rem; font-size: .8rem;
+      color: var(--accent); margin-bottom: 1.5rem; letter-spacing: .04em; text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.15;
+      background: linear-gradient(135deg, #fff 40%, var(--accent2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.2rem;
+    }
+    .hero p { color: var(--muted); max-width: 560px; margin: 0 auto 2.5rem; font-size: 1.05rem; }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      padding: .65rem 1.4rem; border-radius: 8px; font-size: .9rem;
+      font-weight: 600; cursor: pointer; text-decoration: none; transition: opacity .2s, transform .15s;
+      border: none;
+    }
+    .btn:hover { opacity: .85; transform: translateY(-1px); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border) !important; }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 0;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .stat-item {
+      flex: 1; min-width: 140px; text-align: center;
+      padding: 1.4rem 1rem; border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+    .stat-label { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: .2rem; }
+
+    /* ── SECTIONS ── */
+    section { padding: 4rem 2rem; max-width: 980px; margin: 0 auto; }
+    .section-label {
+      font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: .6rem;
+    }
+    h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem; }
+    h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: .5rem; }
+
+    /* ── PROGRAMS GRID ── */
+    .programs-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem; margin-top: 2rem;
+    }
+    .program-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.4rem;
+      transition: border-color .2s, transform .15s;
+      cursor: default;
+    }
+    .program-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .program-icon { font-size: 1.8rem; margin-bottom: .7rem; }
+    .program-name { font-weight: 700; font-size: 1rem; margin-bottom: .3rem; }
+    .program-dept { font-size: .82rem; color: var(--accent); margin-bottom: .5rem; }
+    .program-meta { display: flex; gap: .8rem; flex-wrap: wrap; }
+    .program-tag {
+      font-size: .75rem; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 4px; padding: .15rem .5rem; color: var(--muted);
+    }
+
+    /* ── DATES TIMELINE ── */
+    .dates-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem; margin-top: 2rem;
+    }
+    .date-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.1rem 1.3rem;
+    }
+    .date-phase { font-size: .75rem; color: var(--accent); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .date-val { font-size: 1.05rem; font-weight: 700; margin: .3rem 0 .2rem; }
+    .date-desc { font-size: .82rem; color: var(--muted); }
+
+    /* ── CHECKER WIDGET ── */
+    .checker-widget {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem; margin-top: 2rem;
+    }
+    .checker-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.2rem; margin-bottom: 1.5rem;
+    }
+    .field-group label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: .3rem; font-weight: 600; }
+    input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; margin-top: .3rem; }
+    .range-val { font-size: .85rem; font-weight: 700; color: var(--accent); float: right; }
+    .toggle-group { display: flex; gap: .5rem; margin-top: .4rem; }
+    .toggle-btn {
+      flex: 1; padding: .42rem; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--surface2); color: var(--muted); font-size: .85rem;
+      cursor: pointer; transition: all .2s; text-align: center; user-select: none;
+    }
+    .toggle-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    .calc-btn {
+      background: var(--accent); color: #fff; border: none;
+      padding: .75rem 2rem; border-radius: 8px; font-size: .95rem; font-weight: 600;
+      cursor: pointer; transition: opacity .2s;
+    }
+    .calc-btn:hover { opacity: .85; }
+    .result-box {
+      margin-top: 1.5rem; padding: 1.4rem 1.6rem;
+      border-radius: 12px; border: 1px solid var(--border);
+      background: var(--surface2); display: none;
+    }
+    .result-box.show { display: block; }
+    .result-chance { font-size: 2.6rem; font-weight: 800; margin-bottom: .2rem; }
+    .result-rec { color: var(--muted); font-size: .95rem; margin-top: .4rem; }
+    .result-bar-wrap { background: var(--border); border-radius: 999px; height: 8px; margin: 1rem 0 .5rem; overflow: hidden; }
+    .result-bar { height: 100%; border-radius: 999px; transition: width .7s ease; }
+
+    /* ── APPLICATION FORM ── */
+    .app-form {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 2.5rem; margin-top: 2rem;
+    }
+    .form-section-title {
+      font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent2); margin: 2rem 0 1rem; padding-bottom: .5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-section-title:first-child { margin-top: 0; }
+    .form-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+    .form-group { display: flex; flex-direction: column; gap: .35rem; }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label { font-size: .82rem; color: var(--muted); font-weight: 600; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; padding: .6rem .9rem; color: var(--text);
+      font-size: .9rem; font-family: inherit; outline: none;
+      transition: border-color .2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--accent); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+    .form-group select option { background: #1a1d27; }
+    .required { color: var(--red); margin-left: 2px; }
+
+    .checkbox-group { display: flex; align-items: center; gap: .6rem; margin-top: .3rem; }
+    .checkbox-group input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+    .checkbox-group label { font-size: .88rem; color: var(--muted); cursor: pointer; margin: 0; font-weight: 400; }
+
+    .submit-row { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+    .submit-btn {
+      background: var(--accent); color: #fff; border: none;
+      padding: .8rem 2.5rem; border-radius: 8px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: opacity .2s, transform .15s;
+    }
+    .submit-btn:hover { opacity: .88; transform: translateY(-1px); }
+    .submit-note { font-size: .82rem; color: var(--muted); }
+
+    /* success banner */
+    .success-banner {
+      display: none; background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.4);
+      border-radius: 10px; padding: 1.2rem 1.4rem; margin-top: 1.5rem;
+      color: var(--green); font-weight: 600;
+    }
+    .success-banner.show { display: block; }
+
+    /* ── REQUIREMENTS TABLE ── */
+    .req-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    .req-table th {
+      text-align: left; font-size: .78rem; font-weight: 700; color: var(--muted);
+      letter-spacing: .06em; text-transform: uppercase; padding: .6rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .req-table td {
+      padding: .75rem 1rem; border-bottom: 1px solid rgba(46,50,80,.5);
+      font-size: .88rem; color: var(--text);
+    }
+    .req-table tr:hover td { background: var(--surface); }
+    .badge {
+      display: inline-block; border-radius: 4px; font-size: .74rem;
+      padding: .15rem .5rem; font-weight: 600;
+    }
+    .badge-req { background: rgba(248,113,113,.15); color: var(--red); }
+    .badge-opt { background: rgba(251,191,36,.12); color: var(--yellow); }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: .8rem; margin-top: 1.5rem; }
+    .faq-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden;
+    }
+    .faq-q {
+      padding: 1rem 1.3rem; font-weight: 600; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      user-select: none;
+    }
+    .faq-q:hover { color: var(--accent); }
+    .faq-chevron { font-size: .8rem; color: var(--muted); transition: transform .2s; }
+    .faq-a {
+      display: none; padding: 0 1.3rem 1rem; color: var(--muted); font-size: .9rem; line-height: 1.7;
+    }
+    .faq-item.open .faq-a { display: block; }
+    .faq-item.open .faq-chevron { transform: rotate(90deg); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); text-align: center;
+      padding: 1.5rem 2rem; color: var(--muted); font-size: .8rem;
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      section { padding: 3rem 1.2rem; }
+      .stat-item { min-width: 50%; }
+      .app-form { padding: 1.5rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">🎓 ABC College</div>
+  <ul class="nav-links">
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#dates">Key Dates</a></li>
+    <li><a href="#eligibility">Eligibility</a></li>
+    <li><a href="#checker">Check Chances</a></li>
+    <li><a href="#apply">Apply Now</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⚡ AI-Powered Admission Portal</div>
+  <h1>Welcome to ABC College<br/>Admissions 2025–26</h1>
+  <p>Apply to world-class graduate programs, check your admission chances with our AI predictor, and track your application — all in one place.</p>
+  <div class="hero-btns">
+    <a href="#apply" class="btn btn-primary">📋 Apply Now</a>
+    <a href="#checker" class="btn btn-outline">🔍 Check My Chances</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-num">42+</div>
+    <div class="stat-label">Programs Offered</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">12,000+</div>
+    <div class="stat-label">Students Enrolled</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">94%</div>
+    <div class="stat-label">Placement Rate</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">180+</div>
+    <div class="stat-label">Partner Companies</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">NAAC A+</div>
+    <div class="stat-label">Accreditation</div>
+  </div>
+</div>
+
+<!-- PROGRAMS -->
+<section id="programs">
+  <div class="section-label">Academics</div>
+  <h2>Graduate Programs</h2>
+  <p style="color:var(--muted)">Choose from a wide range of full-time and part-time graduate programs designed for the careers of tomorrow.</p>
+  <div class="programs-grid">
+    <div class="program-card">
+      <div class="program-icon">💻</div>
+      <div class="program-name">M.Tech — Computer Science</div>
+      <div class="program-dept">Dept. of Computer Science & Engineering</div>
+      <div class="program-meta">
+        <span class="program-tag">2 Years</span>
+        <span class="program-tag">Full-time</span>
+        <span class="program-tag">60 Seats</span>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-icon">🤖</div>
+      <div class="program-name">M.Tech — AI & Machine Learning</div>
+      <div class="program-dept">Dept. of Artificial Intelligence</div>
+      <div class="program-meta">
+        <span class="program-tag">2 Years</span>
+        <span class="program-tag">Full-time</span>
+        <span class="program-tag">40 Seats</span>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-icon">📊</div>
+      <div class="program-name">MBA — Business Analytics</div>
+      <div class="program-dept">School of Management</div>
+      <div class="program-meta">
+        <span class="program-tag">2 Years</span>
+        <span class="program-tag">Full-time</span>
+        <span class="program-tag">80 Seats</span>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-icon">⚡</div>
+      <div class="program-name">M.Tech — Electronics & VLSI</div>
+      <div class="program-dept">Dept. of Electronics Engineering</div>
+      <div class="program-meta">
+        <span class="program-tag">2 Years</span>
+        <span class="program-tag">Full-time</span>
+        <span class="program-tag">40 Seats</span>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-icon">🧬</div>
+      <div class="program-name">M.Sc — Data Science</div>
+      <div class="program-dept">Dept. of Mathematics & Statistics</div>
+      <div class="program-meta">
+        <span class="program-tag">2 Years</span>
+        <span class="program-tag">Full-time</span>
+        <span class="program-tag">50 Seats</span>
+      </div>
+    </div>
+    <div class="program-card">
+      <div class="program-icon">🏗</div>
+      <div class="program-name">M.Tech — Civil & Infrastructure</div>
+      <div class="program-dept">Dept. of Civil Engineering</div>
+      <div class="program-meta">
+        <span class="program-tag">2 Years</span>
+        <span class="program-tag">Full-time</span>
+        <span class="program-tag">45 Seats</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KEY DATES -->
+<section id="dates">
+  <div class="section-label">Timeline</div>
+  <h2>Important Dates — 2025–26</h2>
+  <p style="color:var(--muted)">Mark your calendar. Missing a deadline means waiting another cycle.</p>
+  <div class="dates-grid">
+    <div class="date-card">
+      <div class="date-phase">Applications Open</div>
+      <div class="date-val">01 Jan 2025</div>
+      <div class="date-desc">Online portal opens for new registrations.</div>
+    </div>
+    <div class="date-card">
+      <div class="date-phase">Last Date to Apply</div>
+      <div class="date-val">31 Mar 2025</div>
+      <div class="date-desc">Final submission deadline — no extensions.</div>
+    </div>
+    <div class="date-card">
+      <div class="date-phase">Entrance Test</div>
+      <div class="date-val">20 Apr 2025</div>
+      <div class="date-desc">ABC-GAT (Graduate Admission Test) held at campus.</div>
+    </div>
+    <div class="date-card">
+      <div class="date-phase">Results Declared</div>
+      <div class="date-val">10 May 2025</div>
+      <div class="date-desc">Merit list published on the portal.</div>
+    </div>
+    <div class="date-card">
+      <div class="date-phase">Document Verification</div>
+      <div class="date-val">15–20 May 2025</div>
+      <div class="date-desc">Selected candidates must report to campus.</div>
+    </div>
+    <div class="date-card">
+      <div class="date-phase">Classes Begin</div>
+      <div class="date-val">01 Jul 2025</div>
+      <div class="date-desc">Orientation and first semester commencement.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ELIGIBILITY -->
+<section id="eligibility">
+  <div class="section-label">Requirements</div>
+  <h2>Eligibility & Requirements</h2>
+  <p style="color:var(--muted)">Make sure you meet the minimum requirements before applying. Documents marked Required must be submitted at the time of admission.</p>
+  <table class="req-table">
+    <thead>
+      <tr>
+        <th>Requirement</th>
+        <th>Minimum Criteria</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Bachelor's Degree</td><td>B.Tech / B.E. / B.Sc in relevant field</td><td><span class="badge badge-req">Required</span></td></tr>
+      <tr><td>CGPA / Percentage</td><td>≥ 6.5 CGPA (10-pt scale) or 60%</td><td><span class="badge badge-req">Required</span></td></tr>
+      <tr><td>GRE Score</td><td>≥ 300 (for international applicants)</td><td><span class="badge badge-opt">Optional</span></td></tr>
+      <tr><td>TOEFL / IELTS</td><td>TOEFL ≥ 90 or IELTS ≥ 6.5 (for non-native English)</td><td><span class="badge badge-opt">Optional</span></td></tr>
+      <tr><td>Statement of Purpose</td><td>500–1000 words outlining research interests</td><td><span class="badge badge-req">Required</span></td></tr>
+      <tr><td>Letters of Recommendation</td><td>Minimum 2 from academic/professional referees</td><td><span class="badge badge-req">Required</span></td></tr>
+      <tr><td>Research Experience</td><td>Not mandatory, but strongly preferred</td><td><span class="badge badge-opt">Preferred</span></td></tr>
+      <tr><td>Work Experience</td><td>Preferred for MBA programs (≥ 1 year)</td><td><span class="badge badge-opt">Optional</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- CHANCE CHECKER -->
+<section id="checker">
+  <div class="section-label">AI Predictor</div>
+  <h2>Check Your Admission Chances</h2>
+  <p style="color:var(--muted)">Powered by IBM watsonx.ai. Adjust the sliders to match your academic profile and get an instant prediction.</p>
+
+  <div class="checker-widget">
+    <div class="checker-grid">
+      <div class="field-group">
+        <label>GRE Score <span class="range-val" id="gre-val">310</span></label>
+        <input type="range" id="gre" min="260" max="340" value="310" oninput="syncSlider()">
+      </div>
+      <div class="field-group">
+        <label>TOEFL Score <span class="range-val" id="toefl-val">105</span></label>
+        <input type="range" id="toefl" min="0" max="120" value="105" oninput="syncSlider()">
+      </div>
+      <div class="field-group">
+        <label>University Rating <span class="range-val" id="uni-val">3</span></label>
+        <input type="range" id="uni" min="1" max="5" step="1" value="3" oninput="syncSlider()">
+      </div>
+      <div class="field-group">
+        <label>SOP Strength <span class="range-val" id="sop-val">3.5</span></label>
+        <input type="range" id="sop" min="1" max="5" step="0.5" value="3.5" oninput="syncSlider()">
+      </div>
+      <div class="field-group">
+        <label>LOR Strength <span class="range-val" id="lor-val">3.5</span></label>
+        <input type="range" id="lor" min="1" max="5" step="0.5" value="3.5" oninput="syncSlider()">
+      </div>
+      <div class="field-group">
+        <label>CGPA (out of 10) <span class="range-val" id="cgpa-val">8.0</span></label>
+        <input type="range" id="cgpa" min="0" max="10" step="0.1" value="8.0" oninput="syncSlider()">
+      </div>
+      <div class="field-group">
+        <label>Research Experience</label>
+        <div class="toggle-group">
+          <div class="toggle-btn" id="res-no" onclick="setResearch(0)">No</div>
+          <div class="toggle-btn active" id="res-yes" onclick="setResearch(1)">Yes</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()">🔍 Calculate My Chances</button>
+
+    <div class="result-box" id="result-box">
+      <div class="result-chance" id="result-pct">—</div>
+      <div class="result-bar-wrap"><div class="result-bar" id="result-bar" style="width:0%"></div></div>
+      <div class="result-rec" id="result-rec">—</div>
+    </div>
+  </div>
+</section>
+
+<!-- APPLICATION FORM -->
+<section id="apply">
+  <div class="section-label">Apply Now</div>
+  <h2>Graduate Admission Application — ABC College</h2>
+  <p style="color:var(--muted)">Fill in all required fields carefully. You will receive a confirmation email after submission.</p>
+
+  <div class="app-form">
+
+    <!-- Personal Details -->
+    <div class="form-section-title">👤 Personal Information</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>First Name <span class="required">*</span></label>
+        <input type="text" id="f-fname" placeholder="e.g. Nilanjan">
+      </div>
+      <div class="form-group">
+        <label>Last Name <span class="required">*</span></label>
+        <input type="text" id="f-lname" placeholder="e.g. Mondal">
+      </div>
+      <div class="form-group">
+        <label>Date of Birth <span class="required">*</span></label>
+        <input type="date" id="f-dob">
+      </div>
+      <div class="form-group">
+        <label>Gender <span class="required">*</span></label>
+        <select id="f-gender">
+          <option value="">— Select —</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Non-binary</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Nationality <span class="required">*</span></label>
+        <input type="text" id="f-nationality" placeholder="e.g. Indian">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="f-category">
+          <option value="">— Select —</option>
+          <option>General</option>
+          <option>OBC</option>
+          <option>SC</option>
+          <option>ST</option>
+          <option>EWS</option>
+          <option>International</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="form-section-title">📞 Contact Details</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Email Address <span class="required">*</span></label>
+        <input type="email" id="f-email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label>Phone Number <span class="required">*</span></label>
+        <input type="tel" id="f-phone" placeholder="+91 98765 43210">
+      </div>
+      <div class="form-group full">
+        <label>Current Address <span class="required">*</span></label>
+        <input type="text" id="f-address" placeholder="Street, City, State, PIN">
+      </div>
+    </div>
+
+    <!-- Academic Background -->
+    <div class="form-section-title">🎓 Academic Background</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Undergraduate Degree <span class="required">*</span></label>
+        <select id="f-ugdeg">
+          <option value="">— Select —</option>
+          <option>B.Tech</option>
+          <option>B.E.</option>
+          <option>B.Sc</option>
+          <option>BCA</option>
+          <option>B.Com</option>
+          <option>BA</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Field / Specialisation <span class="required">*</span></label>
+        <input type="text" id="f-ugfield" placeholder="e.g. Computer Science">
+      </div>
+      <div class="form-group">
+        <label>University / College Name <span class="required">*</span></label>
+        <input type="text" id="f-ugcollege" placeholder="e.g. Jadavpur University">
+      </div>
+      <div class="form-group">
+        <label>Year of Graduation <span class="required">*</span></label>
+        <select id="f-ugyr">
+          <option value="">— Select —</option>
+          <option>2025</option><option>2024</option><option>2023</option>
+          <option>2022</option><option>2021</option><option>2020</option>
+          <option>2019 or earlier</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>CGPA (out of 10) <span class="required">*</span></label>
+        <input type="number" id="f-cgpa" min="0" max="10" step="0.01" placeholder="e.g. 8.5">
+      </div>
+      <div class="form-group">
+        <label>University Rating (1–5)</label>
+        <select id="f-unirating">
+          <option value="">— Select —</option>
+          <option>5 — Top tier (IIT/NIT/IISc level)</option>
+          <option>4 — Very good</option>
+          <option>3 — Good</option>
+          <option>2 — Average</option>
+          <option>1 — Below average</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Test Scores -->
+    <div class="form-section-title">📝 Entrance & Language Test Scores</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>GRE Score (if applicable)</label>
+        <input type="number" id="f-gre" min="260" max="340" placeholder="260 – 340">
+      </div>
+      <div class="form-group">
+        <label>TOEFL Score (if applicable)</label>
+        <input type="number" id="f-toefl" min="0" max="120" placeholder="0 – 120">
+      </div>
+      <div class="form-group">
+        <label>IELTS Score (if applicable)</label>
+        <input type="number" id="f-ielts" min="0" max="9" step="0.5" placeholder="0 – 9.0">
+      </div>
+      <div class="form-group">
+        <label>GATE Score (if applicable)</label>
+        <input type="number" id="f-gate" min="0" max="1000" placeholder="e.g. 650">
+      </div>
+    </div>
+
+    <!-- Program & Documents -->
+    <div class="form-section-title">📋 Program Selection & Documents</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Program Applying For <span class="required">*</span></label>
+        <select id="f-program">
+          <option value="">— Select Program —</option>
+          <option>M.Tech — Computer Science</option>
+          <option>M.Tech — AI & Machine Learning</option>
+          <option>MBA — Business Analytics</option>
+          <option>M.Tech — Electronics & VLSI</option>
+          <option>M.Sc — Data Science</option>
+          <option>M.Tech — Civil & Infrastructure</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Research Experience</label>
+        <select id="f-research">
+          <option value="">— Select —</option>
+          <option>Yes — published paper</option>
+          <option>Yes — project / thesis</option>
+          <option>Yes — internship research</option>
+          <option>No</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Work Experience</label>
+        <select id="f-work">
+          <option value="">— Select —</option>
+          <option>None (fresher)</option>
+          <option>Less than 1 year</option>
+          <option>1–2 years</option>
+          <option>2–4 years</option>
+          <option>4+ years</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>SOP Strength (self-assessed 1–5)</label>
+        <select id="f-sop">
+          <option value="">— Select —</option>
+          <option>5 — Exceptional</option>
+          <option>4 — Strong</option>
+          <option>3 — Average</option>
+          <option>2 — Weak</option>
+          <option>1 — Very weak</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>No. of Recommendation Letters</label>
+        <select id="f-lor">
+          <option value="">— Select —</option>
+          <option>3 or more</option>
+          <option>2</option>
+          <option>1</option>
+          <option>None yet</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>Statement of Purpose (brief summary) <span class="required">*</span></label>
+        <textarea id="f-soptext" placeholder="Briefly describe your research interests, career goals, and why you are applying to ABC College..."></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Any Additional Information (optional)</label>
+        <textarea id="f-extra" placeholder="Awards, publications, extracurricular activities, special circumstances..."></textarea>
+      </div>
+    </div>
+
+    <!-- Declaration -->
+    <div class="form-section-title">✅ Declaration</div>
+    <div class="checkbox-group">
+      <input type="checkbox" id="f-declare">
+      <label for="f-declare">I certify that all information provided is accurate and complete. I understand that any false or misleading information may result in disqualification.</label>
+    </div>
+    <div class="checkbox-group" style="margin-top:.6rem">
+      <input type="checkbox" id="f-terms">
+      <label for="f-terms">I agree to the Terms & Conditions and Privacy Policy of ABC College.</label>
+    </div>
+
+    <div class="submit-row">
+      <button class="submit-btn" onclick="submitApplication()">📤 Submit Application</button>
+      <span class="submit-note">You will receive a confirmation on your registered email.</span>
+    </div>
+
+    <div class="success-banner" id="success-banner">
+      ✅ Your application has been submitted successfully! Application ID: <strong id="app-id"></strong>. A confirmation has been sent to your email.
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-label">Help</div>
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is GRE mandatory for all programs? <span class="faq-chevron">▶</span></div>
+      <div class="faq-a">GRE is optional for Indian applicants but mandatory for international applicants. A score of 300+ is recommended for a competitive application.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I apply to multiple programs? <span class="faq-chevron">▶</span></div>
+      <div class="faq-a">Yes, you may apply to up to 2 programs. A separate application fee is required for each program.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">When will I receive the admission decision? <span class="faq-chevron">▶</span></div>
+      <div class="faq-a">Merit lists are declared on 10 May 2025. Shortlisted candidates will be notified via email and SMS within 48 hours of the list being published.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What documents do I need to submit at verification? <span class="faq-chevron">▶</span></div>
+      <div class="faq-a">You need: original degree certificates, mark sheets, government ID proof, passport-size photographs, category certificate (if applicable), and test score reports.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Is there a scholarship available? <span class="faq-chevron">▶</span></div>
+      <div class="faq-a">Yes. Merit scholarships are awarded to the top 10% of admitted students in each program. Need-based financial aid is also available — apply separately after receiving admission.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How does the AI admission predictor work? <span class="faq-chevron">▶</span></div>
+      <div class="faq-a">The predictor uses a machine learning model trained on historical admissions data, powered by IBM watsonx.ai. It takes your GRE, TOEFL, CGPA, SOP/LOR strength, university rating, and research experience to estimate your probability of admission. It is indicative only and does not guarantee admission.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  ABC College Admission Portal &nbsp;·&nbsp; Powered by IBM watsonx.ai &nbsp;·&nbsp; © 2025 ABC College. All rights reserved.
+</footer>
+
+<script>
+  // ── Slider sync ──
+  var researchVal = 1;
+
+  function syncSlider() {
+    document.getElementById('gre-val').textContent   = document.getElementById('gre').value;
+    document.getElementById('toefl-val').textContent = document.getElementById('toefl').value;
+    document.getElementById('uni-val').textContent   = document.getElementById('uni').value;
+    document.getElementById('sop-val').textContent   = parseFloat(document.getElementById('sop').value).toFixed(1);
+    document.getElementById('lor-val').textContent   = parseFloat(document.getElementById('lor').value).toFixed(1);
+    document.getElementById('cgpa-val').textContent  = parseFloat(document.getElementById('cgpa').value).toFixed(1);
+  }
+
+  function setResearch(v) {
+    researchVal = v;
+    document.getElementById('res-no').classList.toggle('active', v === 0);
+    document.getElementById('res-yes').classList.toggle('active', v === 1);
+  }
+
+  // ── AI Chance Calculator ──
+  function calculate() {
+    var gre   = parseInt(document.getElementById('gre').value);
+    var toefl = parseInt(document.getElementById('toefl').value);
+    var uni   = parseInt(document.getElementById('uni').value);
+    var sop   = parseFloat(document.getElementById('sop').value);
+    var lor   = parseFloat(document.getElementById('lor').value);
+    var cgpa  = parseFloat(document.getElementById('cgpa').value);
+    var res   = researchVal;
+
+    var score =
+      (gre   - 260) / 80  * 0.18 +
+      toefl         / 120  * 0.14 +
+      (uni   - 1)   / 4    * 0.10 +
+      (sop   - 1)   / 4    * 0.12 +
+      (lor   - 1)   / 4    * 0.12 +
+      cgpa          / 10   * 0.28 +
+      res                  * 0.06;
+
+    score = Math.min(Math.max(score, 0), 1);
+
+    var pct = (score * 100).toFixed(1) + '%';
+    var color, rec;
+    if (score >= 0.80) {
+      color = '#34d399';
+      rec = '🟢 Strong candidate — very likely to be admitted to ABC College.';
+    } else if (score >= 0.60) {
+      color = '#fbbf24';
+      rec = '🟡 Good candidate — admission is probable with a competitive application.';
+    } else if (score >= 0.40) {
+      color = '#fb923c';
+      rec = '🟠 Moderate candidate — admission possible; consider strengthening your profile.';
+    } else {
+      color = '#f87171';
+      rec = '🔴 Weak candidate — improve GRE/TOEFL scores, CGPA, or gain research experience.';
+    }
+
+    var box = document.getElementById('result-box');
+    box.classList.add('show');
+    document.getElementById('result-pct').textContent = pct;
+    document.getElementById('result-pct').style.color = color;
+    document.getElementById('result-rec').textContent = rec;
+    var bar = document.getElementById('result-bar');
+    bar.style.background = color;
+    setTimeout(function(){ bar.style.width = (score * 100) + '%'; }, 50);
+  }
+
+  // ── Application Submit ──
+  function submitApplication() {
+    var fname    = document.getElementById('f-fname').value.trim();
+    var lname    = document.getElementById('f-lname').value.trim();
+    var email    = document.getElementById('f-email').value.trim();
+    var phone    = document.getElementById('f-phone').value.trim();
+    var dob      = document.getElementById('f-dob').value;
+    var gender   = document.getElementById('f-gender').value;
+    var ugdeg    = document.getElementById('f-ugdeg').value;
+    var ugfield  = document.getElementById('f-ugfield').value.trim();
+    var ugcoll   = document.getElementById('f-ugcollege').value.trim();
+    var cgpa     = document.getElementById('f-cgpa').value;
+    var program  = document.getElementById('f-program').value;
+    var soptext  = document.getElementById('f-soptext').value.trim();
+    var address  = document.getElementById('f-address').value.trim();
+    var declare  = document.getElementById('f-declare').checked;
+    var terms    = document.getElementById('f-terms').checked;
+
+    if (!fname || !lname || !email || !phone || !dob || !gender || !ugdeg ||
+        !ugfield || !ugcoll || !cgpa || !program || !soptext || !address) {
+      alert('⚠️ Please fill in all required fields before submitting.');
+      return;
+    }
+    if (!declare || !terms) {
+      alert('⚠️ Please agree to the declaration and terms & conditions.');
+      return;
+    }
+    var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(email)) {
+      alert('⚠️ Please enter a valid email address.');
+      return;
+    }
+
+    // Generate application ID
+    var appId = 'ABC-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000);
+    document.getElementById('app-id').textContent = appId;
+    document.getElementById('success-banner').classList.add('show');
+
+    // Scroll to success
+    document.getElementById('success-banner').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // Disable submit button
+    document.querySelector('.submit-btn').disabled = true;
+    document.querySelector('.submit-btn').textContent = '✅ Application Submitted';
+    document.querySelector('.submit-btn').style.opacity = '0.6';
+  }
+
+  // ── FAQ toggle ──
+  function toggleFaq(el) {
+    var item = el.parentElement;
+    item.classList.toggle('open');
+  }
+
+  // Init sliders
+  syncSlider();
+</script>
+</body>
+</html>
